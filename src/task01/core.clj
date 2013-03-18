@@ -7,7 +7,7 @@
 " 1) Find all elements containing {:class \"r\"}.
 
 Example:
-[:h3 {:class \"r\"} [:a {:shape \"rect\", :class \"l\",
+ [:h3 {:class \"r\"} [:a {:shape \"rect\", :class \"l\",
                          :href \"https://github.com/clojure/clojure\",
                          :onmousedown \"return rwt(this,'','','','4','AFQjCNFlSngH8Q4cB8TMqb710dD6ZkDSJg','','0CFYQFjAD','','',event)\"}
                      [:em {} \"clojure\"] \"/\" [:em {} \"clojure\"] \" · GitHub\"]]
@@ -20,10 +20,11 @@ The link from the example above is 'https://github.com/clojure/clojure'.
 
 Example: ['https://github.com/clojure/clojure', 'http://clojure.com/', . . .]
 "
-  (let [data (parse "clojure_google.html")]
-    nil))
-
+  (let [get-href (fn [el] (((el 2) 1) :href))]
+    (vec (map get-href (loop [data (parse "clojure_google.html")]
+                         (let [vecs (filter vector? data)
+                               d (filter #(= :h3 (first %)) vecs)]
+                           (if (empty? d) (recur (reduce into vecs)) d)))))))
+  
 (defn -main []
   (println (str "Found " (count (get-links)) " links!")))
-
-
