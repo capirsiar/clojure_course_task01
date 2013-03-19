@@ -21,8 +21,7 @@ The link from the example above is 'https://github.com/clojure/clojure'.
 Example: ['https://github.com/clojure/clojure', 'http://clojure.com/', . . .]
 "
   (let [get-href (fn [el] (((el 2) 1) :href))
-        suitable? (fn [el] (and (= :h3 (el 0)) 
-                                (= {:class "r"} (el 1))))] 
+        suitable? (fn [el] (.contains el {:class "r"}))] 
     (vec (map get-href (loop [data (parse "clojure_google.html")]
                          (let [vecs (filter vector? data)
                                d (filter suitable? vecs)]
